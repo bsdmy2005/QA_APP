@@ -16,7 +16,7 @@ export const createProfile = async (data: InsertProfile): Promise<SelectProfile>
 
 export const getProfileById = async (userId: string): Promise<SelectProfile> => {
   try {
-    const profile = await db.query.profilesTable.findFirst({
+    const profile = await db.query.profiles.findFirst({
       where: eq(profilesTable.userId, userId)
     });
     if (!profile) {
@@ -30,7 +30,7 @@ export const getProfileById = async (userId: string): Promise<SelectProfile> => 
 };
 
 export const getAllProfiles = async (): Promise<SelectProfile[]> => {
-  const profiles = await db.query.profilesTable.findMany();
+  const profiles = await db.query.profiles.findMany();
   return profiles as SelectProfile[];
 };
 
@@ -38,7 +38,7 @@ export const updateProfile = async (userId: string, data: Partial<InsertProfile>
   try {
     const [updatedProfile] = await db.update(profilesTable)
       .set({ ...data, updatedAt: new Date() })
-      .where(eq(profilesTable.userId, userId))
+        .where(eq(profilesTable.userId, userId))
       .returning();
     return updatedProfile as SelectProfile;
   } catch (error) {

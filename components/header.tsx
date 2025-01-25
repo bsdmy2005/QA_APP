@@ -1,8 +1,8 @@
- "use client";
+"use client";
 import { Button } from "@/components/ui/button";
 import { SignedIn, SignedOut, useUser } from "@clerk/nextjs";
 import { SignInButton, UserButton } from "@clerk/clerk-react";
-import { HeartIcon, CalendarIcon, UsersIcon, MessageSquareIcon, Menu, X, HomeIcon } from "lucide-react";
+import { BrainCircuit, Search, Users, MessageSquare, Menu, X, HomeIcon, LayoutDashboard } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -12,12 +12,13 @@ export default function Header({ isAdmin }: { isAdmin: boolean }) {
 
   const navigation = [
     { name: 'Home', href: '/', icon: HomeIcon },
-    { name: 'Dashboard', href: '/dashboard', icon: MessageSquareIcon },
+    { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
+    { name: 'Q&A', href: '/qna', icon: MessageSquare },
+    { name: 'Search', href: '/search', icon: Search },
   ];
 
-  // Add admin navigation if user is admin
   const fullNavigation = isSignedIn && isAdmin
-    ? [...navigation, { name: 'Admin', href: '/admin', icon: UsersIcon }]
+    ? [...navigation, { name: 'Admin', href: '/admin', icon: Users }]
     : navigation;
 
   return (
@@ -27,21 +28,23 @@ export default function Header({ isAdmin }: { isAdmin: boolean }) {
           {/* Logo */}
           <div className="flex items-center">
             <Link href="/" className="flex items-center space-x-2">
-              <HeartIcon className="h-6 w-6 text-primary" />
-              <span className="text-xl font-semibold">Your App</span>
+              <BrainCircuit className="h-8 w-8 text-primary" />
+              <span className="text-xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600">
+                FinTech Q&A
+              </span>
             </Link>
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center space-x-6">
             {fullNavigation.map((item) => (
               <Link
                 key={item.name}
                 href={item.href}
-                className="flex items-center space-x-1 text-gray-600 hover:text-primary transition-colors"
+                className="flex items-center space-x-1 text-gray-600 hover:text-primary transition-colors px-3 py-2 rounded-lg hover:bg-gray-50"
               >
                 <item.icon className="h-4 w-4" />
-                <span>{item.name}</span>
+                <span className="font-medium">{item.name}</span>
               </Link>
             ))}
           </div>
@@ -50,7 +53,7 @@ export default function Header({ isAdmin }: { isAdmin: boolean }) {
           <div className="flex items-center space-x-4">
             <SignedOut>
               <SignInButton mode="modal">
-                <Button variant="outline">
+                <Button variant="default" className="gap-2">
                   Sign In
                 </Button>
               </SignInButton>
@@ -60,7 +63,7 @@ export default function Header({ isAdmin }: { isAdmin: boolean }) {
                 afterSignOutUrl="/"
                 appearance={{
                   elements: {
-                    avatarBox: "w-8 h-8"
+                    avatarBox: "w-9 h-9"
                   }
                 }}
               />
@@ -72,6 +75,7 @@ export default function Header({ isAdmin }: { isAdmin: boolean }) {
                 variant="ghost"
                 size="icon"
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="text-gray-700"
               >
                 {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
               </Button>
@@ -81,16 +85,16 @@ export default function Header({ isAdmin }: { isAdmin: boolean }) {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden py-4">
+          <div className="md:hidden py-4 bg-white border-t">
             {fullNavigation.map((item) => (
               <Link
                 key={item.name}
                 href={item.href}
-                className="flex items-center space-x-2 px-4 py-3 text-gray-600 hover:bg-primary/10"
+                className="flex items-center space-x-2 px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-lg mx-2"
                 onClick={() => setIsMenuOpen(false)}
               >
-                <item.icon className="h-5 w-5" />
-                <span>{item.name}</span>
+                <item.icon className="h-5 w-5 text-primary" />
+                <span className="font-medium">{item.name}</span>
               </Link>
             ))}
           </div>
