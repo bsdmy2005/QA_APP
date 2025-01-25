@@ -1,9 +1,9 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
-import { auth } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import Header from "@/components/header";
-import { getProfileByIdAction } from "@/actions/profiles-actions";
+import { getProfileByIdAction, createProfileAction } from "@/actions/profiles-actions";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,8 +16,32 @@ export default async function RootLayout({
   let isAdmin = false;
 
   if (userId) {
-    const profileResult = await getProfileByIdAction(userId);
-    isAdmin = profileResult.data?.role === 'admin';
+    try {
+      const profileResult = await getProfileByIdAction(userId);
+      
+      if (profileResult.isSuccess && profileResult.data) {
+        isAdmin = profileResult.data.role === 'admin';
+      } else {
+        // Profile doesn't exist, create one
+        const user = await currentUser();
+        if (user) {
+          const createResult = await createProfileAction({
+            userId,
+            firstName: user.firstName || "",
+            lastName: user.lastName || "",
+            email: user.emailAddresses[0]?.emailAddress || "",
+            role: "user",
+            membership: "free",
+          });
+          
+          if (createResult.isSuccess && createResult.data) {
+            isAdmin = createResult.data.role === 'admin';
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Error handling profile:", error);
+    }
   }
 
   return (
