@@ -4,3 +4,8 @@ export * from "./questions-schema";
 export * from "./answers-schema";
 export * from "./comments-schema";
 export * from "./tags-schema";
+export * from "./bot-users-schema";
+export * from "./bot-mappings-schema";
+export * from "./api-keys-schema";
+export * from "./question-mappings-schema";
+export * from "./answer-mappings-schema";

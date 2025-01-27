@@ -204,6 +204,7 @@ export default async function QnaPage({
                     body={question.body}
                     votes={question.votes}
                     answerCount={question.answerCount}
+                    hasAcceptedAnswer={question.hasAcceptedAnswer}
                     createdAt={question.createdAt}
                     category={question.category}
                     tags={question.tags}

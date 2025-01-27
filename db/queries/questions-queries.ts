@@ -8,6 +8,7 @@ export async function getQuestions() {
       question: questionsTable,
       category: categoriesTable,
       answerCount: sql<number>`count(distinct ${answersTable.id})::int`,
+      hasAcceptedAnswer: sql<boolean>`bool_or(${answersTable.accepted})`,
       tags: sql<{ id: string; name: string }[]>`
         json_agg(
           json_build_object(
@@ -34,6 +35,7 @@ export async function getQuestions() {
     ...q.question,
     category: q.category,
     answerCount: q.answerCount || 0,
+    hasAcceptedAnswer: q.hasAcceptedAnswer || false,
     tags: q.tags || [],
     user: q.user
   }))
@@ -45,6 +47,7 @@ export async function getQuestionById(id: string) {
       question: questionsTable,
       category: categoriesTable,
       answerCount: sql<number>`count(distinct ${answersTable.id})::int`,
+      hasAcceptedAnswer: sql<boolean>`bool_or(${answersTable.accepted})`,
       tags: sql<{ id: string; name: string }[]>`
         json_agg(
           json_build_object(
@@ -73,6 +76,7 @@ export async function getQuestionById(id: string) {
     ...result.question,
     category: result.category,
     answerCount: result.answerCount || 0,
+    hasAcceptedAnswer: result.hasAcceptedAnswer || false,
     tags: result.tags || [],
     user: result.user
   }
@@ -84,6 +88,7 @@ export async function getQuestionsByUserId(userId: string) {
       question: questionsTable,
       category: categoriesTable,
       answerCount: sql<number>`count(distinct ${answersTable.id})::int`,
+      hasAcceptedAnswer: sql<boolean>`bool_or(${answersTable.accepted})`,
       tags: sql<{ id: string; name: string }[]>`
         json_agg(
           json_build_object(
@@ -111,6 +116,7 @@ export async function getQuestionsByUserId(userId: string) {
     ...q.question,
     category: q.category,
     answerCount: q.answerCount || 0,
+    hasAcceptedAnswer: q.hasAcceptedAnswer || false,
     tags: q.tags || [],
     user: q.user
   }))
@@ -122,6 +128,7 @@ export async function getQuestionsByTag(tagId: string) {
       question: questionsTable,
       category: categoriesTable,
       answerCount: sql<number>`count(distinct ${answersTable.id})::int`,
+      hasAcceptedAnswer: sql<boolean>`bool_or(${answersTable.accepted})`,
       tags: sql<{ id: string; name: string }[]>`
         json_agg(
           json_build_object(
@@ -149,6 +156,7 @@ export async function getQuestionsByTag(tagId: string) {
     ...q.question,
     category: q.category,
     answerCount: q.answerCount || 0,
+    hasAcceptedAnswer: q.hasAcceptedAnswer || false,
     tags: q.tags || [],
     user: q.user
   }))

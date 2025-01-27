@@ -14,7 +14,11 @@ const isPublicRoute = createRouteMatcher([
   "/app/data/templates/(.*)",   // Templates directory
   "/api/inboundemail(.*)",      // Add this line for Postmark webhook
   "/api/test(.*)",
-  "/dashboard/documents(.*)",   // Add this line for testing
+  "/dashboard/documents(.*)", 
+  "/api/teams(.*)",
+  "/api/messages(.*)",
+  "/api/answers(.*)",
+    // Add this line for testing
 ]);
 
 export default clerkMiddleware(async (auth, req) => {

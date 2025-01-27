@@ -174,7 +174,6 @@ export async function voteAnswerAction(
       return { isSuccess: false, message: "Failed to vote answer" }
     }
 
-    revalidatePath(`/qna/${updatedAnswer.questionId}`)
     return {
       isSuccess: true,
       message: "Answer voted successfully",

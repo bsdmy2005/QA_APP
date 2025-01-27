@@ -1,46 +1,41 @@
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
-import { profilesTable } from "@/db/schema";
 import {
-  categoriesTable,
-  questionsTable,
   answersTable,
+  answerVotesTable,
+  categoriesTable,
   commentsTable,
+  profilesTable,
+  questionsTable,
+  questionVotesTable,
   tagsTable,
   questionTagsTable,
-  questionsRelations,
-  answersRelations,
-  tagsRelations,
-  questionTagsRelations
+  botUsersTable,
+  botQuestionsTable,
+  botAnswersTable,
+  apiKeysTable
 } from "@/db/schema";
 
 const connectionString = process.env.DATABASE_URL!;
 
 // Initialize the client
-export const client = postgres(connectionString);
+const client = postgres(connectionString);
+
+const schema = {
+  answers: answersTable,
+  answerVotes: answerVotesTable,
+  categories: categoriesTable,
+  comments: commentsTable,
+  profiles: profilesTable,
+  questions: questionsTable,
+  questionVotes: questionVotesTable,
+  tags: tagsTable,
+  questionTags: questionTagsTable,
+  botUsers: botUsersTable,
+  botQuestions: botQuestionsTable,
+  botAnswers: botAnswersTable,
+  apiKeys: apiKeysTable
+};
 
 // Initialize the database with relations
-export const db = drizzle(client, {
-  schema: {
-    profiles: profilesTable,
-    categories: categoriesTable,
-    questions: {
-      ...questionsTable,
-      ...questionsRelations
-    },
-    answers: {
-      ...answersTable,
-      ...answersRelations
-    },
-    comments: commentsTable,
-    tags: {
-      ...tagsTable,
-      ...tagsRelations
-    },
-    questionTags: {
-      ...questionTagsTable,
-      ...questionTagsRelations
-    }
-  },
-  logger: true
-});
+export const db = drizzle(client, { schema });

@@ -16,13 +16,10 @@ import {
 import { uploadImages, deleteImages } from "@/lib/supabase-storage"
 import { ActionState } from "@/types"
 import { SelectQuestion } from "@/db/schema"
-
-type QuestionWithRelations = SelectQuestion & {
-  category: { id: string; name: string } | null
-  answerCount: number
-  tags: { id: string; name: string }[]
-  user: { firstName: string; lastName: string } | null
-}
+import { QuestionWithRelations } from "@/types/questions-types"
+import { db } from "@/db/db"
+import { eq } from "drizzle-orm"
+import { questionsTable, answersTable } from "@/db/schema"
 
 async function prepareFilesForUpload(files: File[]) {
   return Promise.all(
@@ -281,5 +278,39 @@ export async function getUserVoteForQuestionAction(
   } catch (error) {
     console.error("Error getting vote:", error)
     return { isSuccess: false, message: "Failed to get vote" }
+  }
+}
+
+export async function getQuestionsWithRelationsAction(): Promise<ActionState<QuestionWithRelations[]>> {
+  try {
+    const questions = await db.select().from(questionsTable).leftJoin(
+      answersTable,
+      eq(answersTable.questionId, questionsTable.id)
+    )
+
+    const questionsWithCounts = Object.values(
+      questions.reduce((acc, row) => {
+        if (!acc[row.questions.id]) {
+          acc[row.questions.id] = {
+            ...row.questions,
+            answers: [],
+            category: null
+          }
+        }
+        if (row.answers) {
+          acc[row.questions.id].answers.push(row.answers)
+        }
+        return acc
+      }, {} as Record<string, any>)
+    )
+
+    return {
+      isSuccess: true,
+      message: "Questions retrieved successfully",
+      data: questionsWithCounts
+    }
+  } catch (error) {
+    console.error("Error getting questions:", error)
+    return { isSuccess: false, message: "Failed to get questions" }
   }
 } 

@@ -43,6 +43,27 @@
       "when": 1737814107327,
       "tag": "0005_gray_masque",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1737912846855,
+      "tag": "0006_vengeful_tyrannus",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1737953712035,
+      "tag": "0007_skinny_garia",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1737954935869,
+      "tag": "0008_robust_nick_fury",
+      "breakpoints": true
     }
   ]
 }

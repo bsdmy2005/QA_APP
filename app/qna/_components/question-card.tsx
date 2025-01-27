@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { format } from "date-fns"
-import { MessageSquare } from "lucide-react"
+import { MessageSquare, Check } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { VoteControls } from "@/components/ui/vote-controls"
 import { getUserVoteForQuestionAction, voteQuestionAction } from "@/actions/questions-actions"
@@ -15,6 +15,7 @@ interface QuestionCardProps {
   body: string
   votes: number
   answerCount: number
+  hasAcceptedAnswer?: boolean
   createdAt: Date
   category?: {
     id: string
@@ -25,8 +26,8 @@ interface QuestionCardProps {
     name: string
   }[]
   user?: {
-    firstName: string
-    lastName: string
+    firstName: string | null
+    lastName: string | null
   } | null
 }
 
@@ -36,6 +37,7 @@ export function QuestionCard({
   body,
   votes: initialVotes,
   answerCount,
+  hasAcceptedAnswer,
   createdAt,
   category,
   tags,
@@ -138,10 +140,16 @@ export function QuestionCard({
           getVote={getVote}
         />
         <div className="flex items-center gap-1.5">
-          <MessageSquare className="w-4 h-4 text-muted-foreground" />
-          <span className={`text-sm font-medium ${answerCount > 0 ? 'text-green-600' : 'text-muted-foreground'}`}>
-            {answerCount}
-          </span>
+          <div className={cn(
+            "flex items-center gap-1",
+            hasAcceptedAnswer ? "text-green-600" : "text-muted-foreground"
+          )}>
+            <MessageSquare className="w-4 h-4" />
+            <span className="text-sm font-medium">{answerCount}</span>
+            {hasAcceptedAnswer && (
+              <Check className="w-3 h-3" />
+            )}
+          </div>
         </div>
       </div>
 
@@ -189,4 +197,4 @@ export function QuestionCard({
       </div>
     </div>
   )
-} 
+}
